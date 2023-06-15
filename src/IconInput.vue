@@ -174,9 +174,9 @@ export default {
 
     &-icon {
       display: block;
-      max-height: 1rem;
       margin-inline-end: 0.5rem;
-      max-width: 1rem;
+      height: 1rem;
+      width: 1rem;
     }
   }
 

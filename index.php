@@ -3,6 +3,7 @@
 use Kirby\Cms\App;
 use Kirby\Filesystem\Dir;
 use Kirby\Filesystem\F;
+use Kirby\Sane\Svg;
 use Kirby\Toolkit\A;
 use Kirby\Toolkit\Str;
 
@@ -36,7 +37,11 @@ App::plugin('tobimori/icon-field', [
 
         'folder' => function ($folder = null) {
           if (!$folder) {
-            return option('tobimori.icon-field.folder', realpath(kirby()->roots()->index() . '/assets/icons'));
+            $folder = option('tobimori.icon-field.folder', realpath(kirby()->roots()->index() . '/assets/icons'));
+          }
+
+          if (is_callable($folder)) {
+            $folder = $folder($this);
           }
 
           if (!Str::startsWith($folder, '/')) {
@@ -72,7 +77,7 @@ App::plugin('tobimori/icon-field', [
             fn ($file) => [
               'text' => Str::before($file, '.svg'),
               'value' => $file,
-              'svg' => F::read($folder . '/' . $file)
+              'svg' => Svg::sanitize(F::read($folder . '/' . $file))
             ]
           ), fn ($file) => $file['svg']));
 

@@ -1,6 +1,6 @@
 {
   "name": "tobimori/kirby-icon-field",
-  "description": "The helping hand for my Kirby Baukasten starterkit - Useful helpers & tools I use for my projects",
+  "description": "A simple Icon field plugin for Kirby CMS",
   "version": "1.0.0",
   "type": "kirby-plugin",
   "keywords": [

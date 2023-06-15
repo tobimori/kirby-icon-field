@@ -1,0 +1,11 @@
+# OS files
+.DS_Store
+.idea
+*.cache
+
+# Dev files
+index.dev.mjs
+node_modules
+
+# Composer is not needed for this plugin
+/vendor

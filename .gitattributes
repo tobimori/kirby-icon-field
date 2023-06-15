@@ -1,0 +1,15 @@
+# Git
+.gitattributes export-ignore
+.github/ export-ignore
+.gitignore export-ignore
+
+# Development files
+.editorconfig export-ignore
+.nvm-rc export-ignore
+composer.lock export-ignore
+.husky/ export-ignore
+postcss.config.js export-ignore
+package.json export-ignore
+
+# Source
+src/ export-ignore

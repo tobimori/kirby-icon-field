@@ -1,0 +1,22 @@
+{
+  "name": "kirby-icon-field",
+  "description": "An Icon field for Kirby CMS (4+)",
+  "version": "1.0.0",
+  "private": true,
+  "license": "MIT",
+  "author": "Tobias Möritz",
+  "scripts": {
+    "dev": "kirbyup serve src/index.js",
+    "build": "kirbyup src/index.js",
+    "prepare": "husky install"
+  },
+  "type": "module",
+  "devDependencies": {
+    "autoprefixer": "^10.4.14",
+    "husky": "^8.0.3",
+    "kirbyup": "^2.2.1",
+    "postcss": "^8.4.24",
+    "postcss-logical": "^6.2.0",
+    "sass": "^1.63.4"
+  }
+}

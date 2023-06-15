@@ -1,0 +1,34 @@
+{
+  "name": "tobimori/kirby-icon-field",
+  "description": "The helping hand for my Kirby Baukasten starterkit - Useful helpers & tools I use for my projects",
+  "version": "1.0.0",
+  "type": "kirby-plugin",
+  "keywords": [
+    "kirby",
+    "kirby-plugin"
+  ],
+  "license": "MIT",
+  "authors": [
+    {
+      "name": "Tobias Möritz",
+      "email": "tobias@moeritz.io",
+      "homepage": "https://moeritz.io"
+    }
+  ],
+  "require": {
+    "php": ">=8.2.0",
+    "getkirby/composer-installer": "^1.2"
+  },
+  "require-dev": {
+    "getkirby/cms": "^3.9"
+  },
+  "scripts": {
+    "dist": "composer install --no-dev --optimize-autoloader"
+  },
+  "config": {
+    "optimize-autoloader": true,
+    "allow-plugins": {
+      "getkirby/composer-installer": true
+    }
+  }
+}

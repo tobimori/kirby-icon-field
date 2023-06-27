@@ -68,3 +68,5 @@ return [
 
 [MIT License](./LICENSE)
 Copyright © 2023 Tobias Möritz
+
+The icons in the preview image are part of [Chunk Icons](https://www.figma.com/community/file/889863427421594653/Chunk-Icons) by [Noah Jacobus](https://twitter.com/Jabronus). <3

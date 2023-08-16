@@ -177,6 +177,11 @@ export default {
       margin-inline-end: 0.5rem;
       height: 1rem;
       width: 1rem;
+
+      svg {
+        height: 1rem;
+        width: 1rem;
+      }
     }
   }
 

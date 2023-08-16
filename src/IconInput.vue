@@ -181,6 +181,7 @@ export default {
       svg {
         height: 1rem;
         width: 1rem;
+        filter: brightness(0) invert(1);
       }
     }
   }

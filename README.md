@@ -4,7 +4,7 @@
 
 A simple Icon field for Kirby - throw your Icon pack in a folder, add the field to your blueprints and you're good to go.
 
-> 🚨 This plugin is untested on Kirby < v4-alpha.2 so far and might not work as expected. I don't plan on adding support for Kirby 3 versions (except if provided with a PR).
+> This plugin currently works from Kirby 3.9 to 4.0-alpha.4 - Support for v4 is being worked on.
 
 ## Installation
 

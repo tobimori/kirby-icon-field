@@ -4,7 +4,9 @@
 
 A simple Icon field for Kirby - throw your Icon pack in a folder, add the field to your blueprints and you're good to go.
 
-> This plugin currently works from Kirby 3.9 to 4.0-alpha.4 - Support for v4 is being worked on.
+If you're using Kirby 3.9+, please try using [v1.0.3](https://github.com/tobimori/kirby-icon-field/releases/tag/1.0.3).
+
+For newer installations (Kirby 4.0-beta.1), please use the latest rc version.
 
 ## Installation
 
@@ -22,7 +24,7 @@ Download and copy this repository to `/site/plugins/kirby-icon-field`, or apply 
 
 This plugin relies on having your SVG icons as separate files in a folder for display in the panel - of course you're free to do whatever you want with the field's value in your templates.
 
-Your icons should use `currentcolor` for defining the color of a fill/stroke so they can inherit the correct color from the panel.
+Icons will always be displayed in single-color white or black.
 
 #### Add the field to your blueprint:
 

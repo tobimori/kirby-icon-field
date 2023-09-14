@@ -6,7 +6,7 @@ A simple Icon field for Kirby - throw your Icon pack in a folder, add the field 
 
 If you're using Kirby 3.9+, please try using [v1.0.3](https://github.com/tobimori/kirby-icon-field/releases/tag/1.0.3).
 
-For newer installations (Kirby 4.0-beta.1), please use the latest rc version.
+For newer installations (Kirby 4.0-beta.1), please use the [latest pre-release version](https://github.com/tobimori/kirby-icon-field/releases/).
 
 ## Installation
 

@@ -7,85 +7,93 @@ use Kirby\Sane\Svg;
 use Kirby\Toolkit\A;
 use Kirby\Toolkit\Str;
 
+// shamelessly borrowed from distantnative/retour-for-kirby
+if (
+	version_compare(App::version() ?? '0.0.0', '4.0.0-beta.1', '<') === true ||
+	version_compare(App::version() ?? '0.0.0', '5.0.0', '>') === true
+) {
+	throw new Exception('Kirby Icon Field requires Kirby 4');
+}
+
 App::plugin('tobimori/icon-field', [
-  'options' => [
-    'folder' => null,
-    'cache' => true
-  ],
-  'fields' => [
-    'icon' => [
-      'extends' => 'tags',
-      'props' => [
-        /**
-         * Unset inherited props
-         */
-        'accept' => null,
-        /**
-         * Custom icon to replace the arrow down.
-         */
-        'icon' => function (string $icon = null) {
-          return $icon;
-        },
-        /**
-         * Enable/disable the search in the dropdown
-         * Also limit displayed items (display: 20)
-         * and set minimum number of characters to search (min: 3)
-         */
-        'search' => function ($search = true) {
-          return $search;
-        },
+	'options' => [
+		'folder' => null,
+		'cache' => true
+	],
+	'fields' => [
+		'icon' => [
+			'extends' => 'tags',
+			'props' => [
+				/**
+				 * Unset inherited props
+				 */
+				'accept' => 'options',
+				/**
+				 * Custom icon to replace the arrow down.
+				 */
+				'icon' => function (string|bool $icon = false) {
+					return $icon;
+				},
+				/**
+				 * Enable/disable the search in the dropdown
+				 * Also limit displayed items (display: 20)
+				 * and set minimum number of characters to search (min: 3)
+				 */
+				'search' => function ($search = true) {
+					return $search;
+				},
 
-        'folder' => function ($folder = null) {
-          if (!$folder) {
-            $folder = option('tobimori.icon-field.folder', realpath(kirby()->roots()->index() . '/assets/icons'));
-          }
+				'folder' => function ($folder = null) {
+					if (!$folder) {
+						$folder = option('tobimori.icon-field.folder', realpath(kirby()->roots()->index() . '/assets/icons'));
+					}
 
-          if (is_callable($folder)) {
-            $folder = $folder($this);
-          }
+					if (is_callable($folder)) {
+						$folder = $folder($this);
+					}
 
-          if (!Str::startsWith($folder, '/')) {
-            $folder = realpath(kirby()->roots()->index() . '/' . $folder);
-          }
+					if (!Str::startsWith($folder, '/')) {
+						$folder = realpath(kirby()->roots()->index() . '/' . $folder);
+					}
 
-          return $folder;
-        }
-      ],
-      'methods' => [
-        'toValues' => function ($value) {
-          if (is_null($value) === true) {
-            return [];
-          }
+					return $folder;
+				}
+			],
+			'methods' => [
+				'toValues' => function ($value) {
+					if (is_null($value) === true) {
+						return [];
+					}
 
-          if (is_array($value) === false) {
-            $value = Str::split($value, $this->separator());
-          }
+					if (is_array($value) === false) {
+						$value = Str::split($value, $this->separator());
+					}
 
-          return $this->sanitizeOptions($value);
-        }
-      ],
-      'computed' => [
-        'options' => function () {
-          $folder = $this->folder();
+					return $this->sanitizeOptions($value);
+				}
+			],
+			'computed' => [
+				'options' => function () {
+					$folder = $this->folder();
 
-          if (($cache = kirby()->cache('tobimori.icon-field'))->get($folder)) {
-            return $cache->get($folder);
-          }
+					if (($cache = kirby()->cache('tobimori.icon-field'))->get($folder)) {
+						return $cache->get($folder);
+					}
 
-          $dir = array_values(A::filter(A::map(
-            A::filter(Dir::read($folder), fn ($file) => Str::endsWith($file, 'svg', true)),
-            fn ($file) => [
-              'text' => Str::before($file, '.svg'),
-              'value' => $file,
-              'svg' => Svg::sanitize(F::read($folder . '/' . $file))
-            ]
-          ), fn ($file) => $file['svg']));
+					$dir = array_values(A::filter(A::map(
+						A::filter(Dir::read($folder), fn ($file) => Str::endsWith($file, 'svg', true)),
+						fn ($file) => [
+							'text' => Str::before($file, '.svg'),
+							'value' => $file,
+							'svg' => Svg::sanitize(F::read($folder . '/' . $file))
+						]
+					), fn ($file) => $file['svg']));
 
-          $cache->set($folder, $dir);
+					$cache->set($folder, $dir);
 
-          return $dir;
-        }
-      ]
-    ]
-  ]
+					return $dir;
+				}
+			]
+		]
+	]
 ]);

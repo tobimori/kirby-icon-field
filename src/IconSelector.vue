@@ -68,7 +68,7 @@ export default {
 
     &-icon {
       display: block;
-      margin-inline-end: var(--spacing-1);
+      margin-inline-end: var(--spacing-2);
       height: 1.125rem;
       width: 1.125rem;
 

@@ -104,19 +104,22 @@ export default {
       margin: calc(var(--tags-gap) * -1);
       height: calc(var(--tag-height) + var(--tags-gap) * 2);
       flex-grow: 1;
+      outline: none;
+      width: calc(100% + var(--tags-gap));
 
       svg {
         filter: brightness(0);
       }
     }
+
     &-text {
       display: flex;
       align-items: center;
-      padding-inline-start: var(--spacing-1);
+      padding-inline-start: var(--spacing-2);
 
       &-icon {
         display: block;
-        margin-inline-end: var(--spacing-1);
+        margin-inline-end: var(--spacing-2);
         height: 1.125rem;
         width: 1.125rem;
 

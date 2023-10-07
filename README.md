@@ -6,7 +6,7 @@ A simple Icon field for Kirby - throw your Icon pack in a folder, add the field 
 
 If you're using Kirby 3.9+, please try using [v1.0.3](https://github.com/tobimori/kirby-icon-field/releases/tag/1.0.3).
 
-For newer installations (Kirby 4.0-beta.1), please use the [latest pre-release version](https://github.com/tobimori/kirby-icon-field/releases/).
+For newer installations (Kirby 4.0), please use the [latest pre-release version](https://github.com/tobimori/kirby-icon-field/releases/).
 
 ## Installation
 
@@ -35,8 +35,13 @@ fields:
     type: icon
     folder: assets/icons # path to your icon folder, relative to the `index` kirby root
     max: 1 # max number of icons to select - 1 will look like a 'select field', none or more like a 'multiselect' field
+    sprite: svg-sprite.svg # optional, path to your svg sprite relative to folder option, if you want to use a sprite instead of individual files
     # [more settings...] - same as multi-select field, e.g. disabling search, limiting icons, etc.
 ```
+
+> **NOTE**
+>
+> If you're using a sprite, make sure the file is available for the user to access at the set path. The plugin does not copy or move the file, it only references it. The `#id` reference will be stored without a `.svg` extension unlike the individual files mode.
 
 #### Use the field value in your panel
 
@@ -46,10 +51,11 @@ fields:
 
 ## Options
 
-| Option   | Default       | Description                                           |
-| -------- | ------------- | ----------------------------------------------------- |
-| `cache`  | `true`        | Enable cache for reading from icons directory         |
-| `folder` | `assets/icon` | Default folder for icon field, can also be a function |
+| Option   | Default        | Description                                              |
+| -------- | -------------- | -------------------------------------------------------- |
+| `cache`  | `true`         | Enable cache for reading from icons directory            |
+| `folder` | `assets/icons` | Default folder for icon field, can also be a function    |
+| `sprite` | `null`         | Default file for SVG sprite file, can also be a function |
 
 Options allow you to fine tune the behaviour of the plugin. You can set them in your `config.php` file:
 
@@ -57,7 +63,7 @@ Options allow you to fine tune the behaviour of the plugin. You can set them in 
 return [
     'tobimori.icon-field' => [
         'cache' => true,
-        'folder' => 'assets/icon'
+        'folder' => 'assets/icons'
     ],
 ];
 ```

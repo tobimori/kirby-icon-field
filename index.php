@@ -9,7 +9,7 @@ use Kirby\Toolkit\Str;
 
 // shamelessly borrowed from distantnative/retour-for-kirby
 if (
-	version_compare(App::version() ?? '0.0.0', '4.0.0-beta.1', '<') === true ||
+	version_compare(App::version() ?? '0.0.0', '4.0.0-beta.2', '<') === true ||
 	version_compare(App::version() ?? '0.0.0', '5.0.0', '>') === true
 ) {
 	throw new Exception('Kirby Icon Field requires Kirby 4');
@@ -18,19 +18,17 @@ if (
 App::plugin('tobimori/icon-field', [
 	'options' => [
 		'folder' => null,
+		'sprite' => null,
 		'cache' => true
 	],
 	'fields' => [
 		'icon' => [
 			'extends' => 'tags',
 			'props' => [
-				/**
-				 * Unset inherited props
-				 */
+				// Unset inherited props
 				'accept' => 'options',
-				/**
-				 * Custom icon to replace the arrow down.
-				 */
+
+				// Custom icon
 				'icon' => function (string|bool $icon = false) {
 					return $icon;
 				},
@@ -43,6 +41,7 @@ App::plugin('tobimori/icon-field', [
 					return $search;
 				},
 
+				// Folder option
 				'folder' => function ($folder = null) {
 					if (!$folder) {
 						$folder = option('tobimori.icon-field.folder', realpath(kirby()->roots()->index() . '/assets/icons'));
@@ -57,6 +56,27 @@ App::plugin('tobimori/icon-field', [
 					}
 
 					return $folder;
+				},
+
+				// Sprite option
+				'sprite' => function ($sprite = null) {
+					if (!$sprite) {
+						$sprite = option('tobimori.icon-field.sprite');
+					}
+
+					if (is_callable($sprite)) {
+						$sprite = $sprite($this);
+					}
+
+					if (Str::endsWith($sprite, '.svg') === false) {
+						$sprite .= '.svg';
+					}
+
+					if (F::exists($this->folder() . '/' . $sprite) === false) {
+						$sprite = null;
+					}
+
+					return $sprite;
 				}
 			],
 			'methods' => [
@@ -73,12 +93,45 @@ App::plugin('tobimori/icon-field', [
 				}
 			],
 			'computed' => [
-				'options' => function () {
+				// Load svg sprite
+				'spriteOptions' => function () {
 					$folder = $this->folder();
+					$sprite = $this->sprite();
 
-					if (($cache = kirby()->cache('tobimori.icon-field'))->get($folder)) {
-						return $cache->get($folder);
-					}
+					$svg = Svg::sanitize(F::read($folder . '/' . $sprite));
+					$svg = simplexml_load_string($svg);
+					$svg->registerXPathNamespace('s', 'http://www.w3.org/2000/svg');
+
+					$symbols = $svg->xpath('//s:symbol');
+
+					// Try to find the sprite url
+					$relative = Str::after($this->folder(), kirby()->roots()->index() . '/');
+					$url = kirby()->url() . '/' . $relative . '/' . $sprite;
+
+					// Map symbols to options
+					$data = A::map($symbols, function ($symbol) use ($url) {
+						$id = (string)$symbol['id'];
+
+						// Generate SVG that consumes the icon
+						$useSvg = new SimpleXMLElement('<svg xmlns="http://www.w3.org/2000/svg"></svg>');
+						$use = $useSvg->addChild('use');
+						$use->addAttribute('xlink:href', "{$url}#{$id}", 'http://www.w3.org/1999/xlink');
+
+						return [
+							'text' => $id,
+							'value' => $id,
+							'svg' => $useSvg->asXML()
+						];
+					});
+
+					kirby()->cache('tobimori.icon-field')->set($folder . $sprite, $data);
+
+					return $data;
+				},
+
+				// Load all svg files in folder
+				'dirOptions' => function () {
+					$folder = $this->folder();
 
 					$dir = array_values(A::filter(A::map(
 						A::filter(Dir::read($folder), fn ($file) => Str::endsWith($file, 'svg', true)),
@@ -89,9 +142,22 @@ App::plugin('tobimori/icon-field', [
 						]
 					), fn ($file) => $file['svg']));
 
-					$cache->set($folder, $dir);
+					kirby()->cache('tobimori.icon-field')->set($folder, $dir);
 
 					return $dir;
+				},
+
+				// Final options for the field
+				'options' => function () {
+					$folder = $this->folder();
+					$sprite = $this->sprite();
+
+					// Return the cached data if available
+					if (($cache = kirby()->cache('tobimori.icon-field'))->get($folder . $sprite)) {
+						return $cache->get($folder . $sprite);
+					}
+
+					return !$sprite ? $this->dirOptions() : $this->spriteOptions();
 				}
 			]
 		]

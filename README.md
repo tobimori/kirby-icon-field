@@ -43,7 +43,7 @@ fields:
 >
 > If you're using a sprite, make sure the file is available for the user to access at the set path. The plugin does not copy or move the file, it only references it. The `#id` reference will be stored without a `.svg` extension unlike the individual files mode.
 
-#### Use the field value in your panel
+#### Use the field value in your template
 
 ```php
 <?= svg('/assets/icons/' . $page->icon()) ?>

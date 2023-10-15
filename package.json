@@ -1,7 +1,4 @@
 {
-  "name": "kirby-icon-field",
-  "description": "An Icon field for Kirby CMS (4+)",
-  "version": "2.0.0-rc.2",
   "private": true,
   "license": "MIT",
   "author": "Tobias Möritz",

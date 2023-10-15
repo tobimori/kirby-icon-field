@@ -1,6 +1,7 @@
 <?php
 
 use Kirby\Cms\App;
+use Kirby\Cms\R;
 use Kirby\Filesystem\Dir;
 use Kirby\Filesystem\F;
 use Kirby\Sane\Svg;
@@ -19,6 +20,9 @@ App::plugin('tobimori/icon-field', [
 	'options' => [
 		'folder' => null,
 		'sprite' => null,
+		'include' => [],
+		'exclude' => [],
+		'includeExtension' => true,
 		'cache' => true
 	],
 	'fields' => [
@@ -77,7 +81,31 @@ App::plugin('tobimori/icon-field', [
 					}
 
 					return $sprite;
-				}
+				},
+
+				'include' => function ($include = []) {
+					if (is_callable($include)) {
+						$include = $include($this);
+					}
+
+					if (count($include) === 0) {
+						$include = option('tobimori.icon-field.include', []);
+					}
+
+					return $include;
+				},
+
+				'exclude' => function ($exclude = []) {
+					if (is_callable($exclude)) {
+						$exclude = $exclude($this);
+					}
+
+					if (count($exclude) === 0) {
+						$exclude = option('tobimori.icon-field.exclude', []);
+					}
+
+					return $exclude;
+				},
 			],
 			'methods' => [
 				'toValues' => function ($value) {
@@ -93,71 +121,72 @@ App::plugin('tobimori/icon-field', [
 				}
 			],
 			'computed' => [
-				// Load svg sprite
-				'spriteOptions' => function () {
-					$folder = $this->folder();
-					$sprite = $this->sprite();
-
-					$svg = Svg::sanitize(F::read($folder . '/' . $sprite));
-					$svg = simplexml_load_string($svg);
-					$svg->registerXPathNamespace('s', 'http://www.w3.org/2000/svg');
-
-					$symbols = $svg->xpath('//s:symbol');
-
-					// Try to find the sprite url
-					$relative = Str::after($this->folder(), kirby()->roots()->index() . '/');
-					$url = kirby()->url() . '/' . $relative . '/' . $sprite;
-
-					// Map symbols to options
-					$data = A::map($symbols, function ($symbol) use ($url) {
-						$id = (string)$symbol['id'];
-
-						// Generate SVG that consumes the icon
-						$useSvg = new SimpleXMLElement('<svg xmlns="http://www.w3.org/2000/svg"></svg>');
-						$use = $useSvg->addChild('use');
-						$use->addAttribute('xlink:href', "{$url}#{$id}", 'http://www.w3.org/1999/xlink');
-
-						return [
-							'text' => $id,
-							'value' => $id,
-							'svg' => $useSvg->asXML()
-						];
-					});
-
-					kirby()->cache('tobimori.icon-field')->set($folder . $sprite, $data);
-
-					return $data;
-				},
-
-				// Load all svg files in folder
-				'dirOptions' => function () {
-					$folder = $this->folder();
-
-					$dir = array_values(A::filter(A::map(
-						A::filter(Dir::read($folder), fn ($file) => Str::endsWith($file, 'svg', true)),
-						fn ($file) => [
-							'text' => Str::before($file, '.svg'),
-							'value' => $file,
-							'svg' => Svg::sanitize(F::read($folder . '/' . $file))
-						]
-					), fn ($file) => $file['svg']));
-
-					kirby()->cache('tobimori.icon-field')->set($folder, $dir);
-
-					return $dir;
-				},
-
 				// Final options for the field
 				'options' => function () {
-					$folder = $this->folder();
-					$sprite = $this->sprite();
+					$kirby = kirby();
+					$data = [];
+					$hash = md5(serialize($this->props()));
 
 					// Return the cached data if available
-					if (($cache = kirby()->cache('tobimori.icon-field'))->get($folder . $sprite)) {
-						return $cache->get($folder . $sprite);
+					if ($cache = $kirby->cache('tobimori.icon-field')->get($hash)) {
+						return $cache;
 					}
 
-					return !$sprite ? $this->dirOptions() : $this->spriteOptions();
+					$folder = $this->folder();
+					$sprite = $this->sprite();
+					if (!$sprite) {
+						$data = array_values(A::filter(A::map(
+							A::filter(Dir::read($folder), fn ($file) => Str::endsWith($file, 'svg', true)),
+							fn ($file) => [
+								'text' => $kirby->option('tobimori.icon-field.includeExtension') ? $file : Str::before($file, '.'),
+								'value' => $file,
+								'svg' => Svg::sanitize(F::read($folder . '/' . $file))
+							]
+						), fn ($file) => $file['svg']));
+					} else {
+						$svg = Svg::sanitize(F::read($folder . '/' . $sprite));
+						$svg = simplexml_load_string($svg);
+						$svg->registerXPathNamespace('s', 'http://www.w3.org/2000/svg');
+
+						$symbols = $svg->xpath('//s:symbol');
+
+						// Try to find the sprite url
+						$relative = Str::after($this->folder(), $kirby->roots()->index() . '/');
+						$url = $kirby->url() . '/' . $relative . '/' . $sprite;
+
+						// Map symbols to options
+						$data = A::map($symbols, function ($symbol) use ($url) {
+							$id = (string)$symbol['id'];
+
+							// Generate SVG that consumes the icon
+							$useSvg = new SimpleXMLElement('<svg xmlns="http://www.w3.org/2000/svg"></svg>');
+							$use = $useSvg->addChild('use');
+							$use->addAttribute('xlink:href', "{$url}#{$id}", 'http://www.w3.org/1999/xlink');
+
+							return [
+								'text' => $id,
+								'value' => $id,
+								'svg' => $useSvg->asXML()
+							];
+						});
+					}
+
+					if (count($this->include()) > 0) {
+						$data = A::filter($data, function ($item) {
+							return in_array(Str::replace($item['value'], '.svg', ''), $this->include());
+						});
+					}
+
+					if (count($this->exclude()) > 0) {
+						$data = A::filter($data, function ($item) {
+							return !in_array(Str::replace($item['value'], '.svg', ''), $this->exclude());
+						});
+					}
+
+					$data = array_values($data); // reset keys
+
+					$kirby->cache('tobimori.icon-field')->set($hash, $data);
+					return $data;
 				}
 			]
 		]

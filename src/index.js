@@ -1,17 +1,21 @@
-import IconField from "./IconField.vue"
-import IconInput from "./IconInput.vue"
+import IconField from './IconField.vue'
+import IconInput from './IconInput.vue'
 import IconTags from './IconTags.vue'
-import IconSelector from './IconSelector.vue'
-import IconSelectorDropdown from './IconSelectorDropdown.vue'
+import IconPicklistDropdown from './IconPicklistDropdown.vue'
+import IconPicklistInput from './IconPicklistInput.vue'
+import IconChoicesInput from './IconChoicesInput.vue'
+import IconChoiceInput from './IconChoiceInput.vue'
 
-window.panel.plugin("tobimori/icon-field", {
+panel.plugin('tobimori/icon-field', {
   fields: {
     icon: IconField
   },
   components: {
-		"k-icon-input": IconInput,
+    'k-icon-input': IconInput,
     'k-icon-tags': IconTags,
-    'k-icon-selector-dropdown': IconSelectorDropdown,
-		'k-icon-selector': IconSelector
+    'k-icon-picklist-dropdown': IconPicklistDropdown,
+    'k-icon-picklist-input': IconPicklistInput,
+    'k-icon-choices-input': IconChoicesInput,
+    'k-icon-choice-input': IconChoiceInput
   }
 })

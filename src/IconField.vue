@@ -1,4 +1,4 @@
-https://github.com/getkirby/kirby/blob/v4/develop/panel/src/components/Forms/Field/MultiselectField.vue
+https://github.com/getkirby/kirby/blob/main/panel/src/components/Forms/Field/MultiselectField.vue
 
 <template>
   <k-field v-bind="$props" :input="_uid" :counter="null" class="k-multiselect-field">

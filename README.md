@@ -37,8 +37,7 @@ fields:
     # [more settings...] - same as multi-select field, e.g. disabling search, limiting icons, etc.
 ```
 
-> **NOTE**
->
+> [!NOTE]
 > If you're using a sprite, make sure the file is available for the user to access at the set path. The plugin does not copy or move the file, it only references it. The `#id` reference will be stored without a `.svg` extension unlike the individual files mode.
 
 #### Use the field value in your template
@@ -68,11 +67,12 @@ return [
 
 ## Support
 
-> This plugin is provided free of charge & published under the permissive MIT License. If you use it in a commercial project, please consider to [sponsor me on GitHub](https://github.com/sponsors/tobimori) to support further development and continued maintenance of my plugins.
+> [!NOTE]
+> This plugin is provided free of charge & published under the permissive MIT License. If you use it in a commercial project, please consider to [sponsor me on GitHub](https://github.com/sponsors/tobimori) to support further development and continued maintenance of Kirby Icon Field.
 
 ## License
 
 [MIT License](./LICENSE)
-Copyright © 2023 Tobias Möritz
+Copyright © 2023-2024 Tobias Möritz
 
 The icons in the preview image are part of [Chunk Icons](https://www.figma.com/community/file/889863427421594653/Chunk-Icons) by [Noah Jacobus](https://twitter.com/Jabronus). <3

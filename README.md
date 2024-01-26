@@ -2,11 +2,9 @@
 
 # Kirby Icon Field
 
-A simple Icon field for Kirby - throw your Icon pack in a folder, add the field to your blueprints and you're good to go.
+A simple Icon field for Kirby 4+ - throw your Icon pack in a folder, add the field to your blueprints and you're good to go.
 
 If you're using Kirby 3.9+, please try using [v1.0.3](https://github.com/tobimori/kirby-icon-field/releases/tag/1.0.3).
-
-For newer installations (Kirby 4.0), please use the [latest pre-release version](https://github.com/tobimori/kirby-icon-field/releases/).
 
 ## Installation
 

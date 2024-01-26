@@ -5,12 +5,14 @@ import IconPicklistDropdown from './IconPicklistDropdown.vue'
 import IconPicklistInput from './IconPicklistInput.vue'
 import IconChoicesInput from './IconChoicesInput.vue'
 import IconChoiceInput from './IconChoiceInput.vue'
+import IconFieldPreview from './IconFieldPreview.vue'
 
 panel.plugin('tobimori/icon-field', {
   fields: {
     icon: IconField
   },
   components: {
+    'k-icon-field-preview': IconFieldPreview,
     'k-icon-input': IconInput,
     'k-icon-tags': IconTags,
     'k-icon-picklist-dropdown': IconPicklistDropdown,

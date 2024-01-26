@@ -96,12 +96,12 @@ export default {
       &-icon {
         display: block;
         margin-inline-end: var(--spacing-2);
-        height: 1.125rem;
-        width: 1.125rem;
+        height: 1rem;
+        width: 1rem;
 
         svg {
-          height: 1.125rem;
-          width: 1.125rem;
+          height: 1rem;
+          width: 1rem;
           filter: brightness(0) invert(1);
         }
       }

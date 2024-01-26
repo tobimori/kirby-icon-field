@@ -9,11 +9,11 @@
   },
   "type": "module",
   "devDependencies": {
-    "autoprefixer": "^10.4.16",
+    "autoprefixer": "^10.4.17",
     "husky": "^8.0.3",
     "kirbyup": "^2.2.1",
-    "postcss": "^8.4.32",
+    "postcss": "^8.4.33",
     "postcss-logical": "^6.2.0",
-    "sass": "^1.69.5"
+    "sass": "^1.70.0"
   }
 }

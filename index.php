@@ -1,7 +1,6 @@
 <?php
 
 use Kirby\Cms\App;
-use Kirby\Cms\R;
 use Kirby\Filesystem\Dir;
 use Kirby\Filesystem\F;
 use Kirby\Sane\Svg;
@@ -152,7 +151,7 @@ App::plugin('tobimori/icon-field', [
 
 						// Try to find the sprite url
 						$relative = Str::after($this->folder(), $kirby->roots()->index() . '/');
-						$url = $kirby->url() . '/' . $relative . '/' . $sprite;
+						$url = A::join(A::filter([Str::trim($kirby->url(), '/'), $relative, $sprite], fn ($e) => !!$e), '/');
 
 						// Map symbols to options
 						$data = A::map($symbols, function ($symbol) use ($url) {

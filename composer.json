@@ -1,7 +1,7 @@
 {
   "name": "tobimori/kirby-icon-field",
   "description": "A simple Icon field plugin for Kirby CMS",
-  "version": "2.0.0",
+  "version": "2.0.1",
   "type": "kirby-plugin",
   "keywords": [
     "kirby",

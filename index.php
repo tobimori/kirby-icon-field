@@ -124,7 +124,7 @@ App::plugin('tobimori/icon-field', [
 				'options' => function () {
 					$kirby = kirby();
 					$data = [];
-					$hash = md5(serialize($this->props()));
+					$hash = md5(serialize(A::get($this->props(), ['folder', 'sprite', 'include', 'exclude'])));
 
 					// Return the cached data if available
 					if ($cache = $kirby->cache('tobimori.icon-field')->get($hash)) {

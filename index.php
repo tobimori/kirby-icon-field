@@ -50,6 +50,12 @@ App::plugin('tobimori/icon-field', [
 						$folder = option('tobimori.icon-field.folder', realpath(kirby()->roots()->index() . '/assets/icons'));
 					}
 
+					$folder = Str::template($folder, [
+						'kirby' => ($kirby = kirby()),
+						'site' => ($site = $kirby->site()),
+						'page' => $site->page(),
+					]);
+
 					if (is_callable($folder)) {
 						$folder = $folder($this);
 					}
@@ -66,6 +72,12 @@ App::plugin('tobimori/icon-field', [
 					if (!$sprite) {
 						$sprite = option('tobimori.icon-field.sprite');
 					}
+
+					$sprite = Str::template($sprite, [
+						'kirby' => ($kirby = kirby()),
+						'site' => ($site = $kirby->site()),
+						'page' => $site->page(),
+					]);
 
 					if (is_callable($sprite)) {
 						$sprite = $sprite($this);

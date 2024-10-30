@@ -50,15 +50,15 @@ App::plugin('tobimori/icon-field', [
 						$folder = option('tobimori.icon-field.folder', realpath(kirby()->roots()->index() . '/assets/icons'));
 					}
 
+					if (is_callable($folder)) {
+						$folder = $folder($this);
+					}
+
 					$folder = Str::template($folder, [
 						'kirby' => ($kirby = kirby()),
 						'site' => ($site = $kirby->site()),
 						'page' => $site->page(),
 					]);
-
-					if (is_callable($folder)) {
-						$folder = $folder($this);
-					}
 
 					if (!Str::startsWith($folder, '/')) {
 						$folder = realpath(kirby()->roots()->index() . '/' . $folder);
@@ -73,15 +73,15 @@ App::plugin('tobimori/icon-field', [
 						$sprite = option('tobimori.icon-field.sprite');
 					}
 
+					if (is_callable($sprite)) {
+						$sprite = $sprite($this);
+					}
+
 					$sprite = Str::template($sprite, [
 						'kirby' => ($kirby = kirby()),
 						'site' => ($site = $kirby->site()),
 						'page' => $site->page(),
 					]);
-
-					if (is_callable($sprite)) {
-						$sprite = $sprite($this);
-					}
 
 					if (Str::endsWith($sprite, '.svg') === false) {
 						$sprite .= '.svg';
@@ -147,13 +147,13 @@ App::plugin('tobimori/icon-field', [
 					$sprite = $this->sprite();
 					if (!$sprite) {
 						$data = array_values(A::filter(A::map(
-							A::filter(Dir::read($folder), fn ($file) => Str::endsWith($file, 'svg', true)),
-							fn ($file) => [
+							A::filter(Dir::read($folder), fn($file) => Str::endsWith($file, 'svg', true)),
+							fn($file) => [
 								'text' => $kirby->option('tobimori.icon-field.includeExtension') ? $file : Str::before($file, '.'),
 								'value' => $file,
 								'svg' => Svg::sanitize(F::read($folder . '/' . $file))
 							]
-						), fn ($file) => $file['svg']));
+						), fn($file) => $file['svg']));
 					} else {
 						$svg = Svg::sanitize(F::read($folder . '/' . $sprite));
 						$svg = simplexml_load_string($svg);
@@ -163,7 +163,7 @@ App::plugin('tobimori/icon-field', [
 
 						// Try to find the sprite url
 						$relative = Str::after($this->folder(), $kirby->roots()->index() . '/');
-						$url = A::join(A::filter([Str::trim($kirby->url(), '/'), $relative, $sprite], fn ($e) => !!$e), '/');
+						$url = A::join(A::filter([Str::trim($kirby->url(), '/'), $relative, $sprite], fn($e) => !!$e), '/');
 
 						// Map symbols to options
 						$data = A::map($symbols, function ($symbol) use ($url) {

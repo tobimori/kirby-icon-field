@@ -31,7 +31,7 @@ https://github.com/getkirby/kirby/blob/main/panel/src/components/Navigation/Tags
 				@remove="remove(itemIndex, item)"
 			>
 				<!-- eslint-disable-next-line vue/no-v-html -->
-				<span v-if="item.svg" class="k-tag-text-icon" v-html="item.svg" />
+				<span v-if="option(item)" class="k-tag-text-icon" v-html="svg(item.value)" />
 				<span v-safe-html="item.text" />
 			</k-tag>
 			<template #footer>
@@ -43,8 +43,13 @@ https://github.com/getkirby/kirby/blob/main/panel/src/components/Navigation/Tags
 </template>
 
 <script>
+import { iconSvg } from "./svgs.js"
+
 export default {
 	extends: "k-tags",
+	inject: {
+		iconField: { default: null }
+	},
 	computed: {
 		isDraggable() {
 			if (
@@ -67,6 +72,9 @@ export default {
 		remove(index) {
 			this.tags.splice(index, 1)
 			this.input()
+		},
+		svg(value) {
+			return iconSvg(this.iconField, value)
 		}
 	}
 }
@@ -101,6 +109,7 @@ export default {
 
 	.k-tag-text-icon {
 		display: block;
+		flex-shrink: 0;
 		margin-inline-end: var(--spacing-2);
 		height: 1rem;
 		width: 1rem;

@@ -48,6 +48,8 @@ class IconField extends MultiselectField
 	 */
 	protected array|null $icons = null;
 
+	protected string|null $revision = null;
+
 	public function config(): array
 	{
 		$kirby = $this->kirby();
@@ -57,6 +59,29 @@ class IconField extends MultiselectField
 			'sprite' => $kirby->option('tobimori.icon-field.sprite'),
 			'include' => $kirby->option('tobimori.icon-field.include'),
 			'exclude' => $kirby->option('tobimori.icon-field.exclude')
+		];
+	}
+
+	public function api(): array
+	{
+		$field = $this;
+
+		return [
+			[
+				'pattern' => 'svgs',
+				'method' => 'POST',
+				// Kirby calls route actions with `Closure::call()`, which fails for static closures
+				// @mago-expect lint:prefer-static-closure
+				'action' => function () use ($field): array {
+					$values = $field->kirby()->request()->get('values');
+					$values = is_array($values) ? $values : [];
+
+					return array_values(array_map(
+						static fn (array $icon): array => ['value' => $icon['value'], 'svg' => $icon['svg']],
+						A::filter($field->icons(), static fn (array $icon): bool => in_array($icon['value'], $values, true))
+					));
+				}
+			]
 		];
 	}
 
@@ -90,11 +115,50 @@ class IconField extends MultiselectField
 	}
 
 	/**
+	 * All icons with their sanitized SVG markup
+	 *
 	 * @return list<array{text: string, value: string, svg: string}>
+	 */
+	public function icons(): array
+	{
+		return $this->icons ??= $this->loadIcons();
+	}
+
+	/**
+	 * The options leave out the SVG markup, the Panel loads it
+	 * for the visible icons from the `svgs` route
+	 *
+	 * @return list<array{text: string, value: string}>
 	 */
 	public function options(): array
 	{
-		return $this->icons ??= $this->loadIcons();
+		return array_map(static fn (array $icon): array => ['text' => $icon['text'], 'value' => $icon['value']], $this->icons());
+	}
+
+	public function props(): array
+	{
+		return [...parent::props(), 'revision' => $this->revision()];
+	}
+
+	/**
+	 * Changes when the icons change, the Panel caches the SVGs per revision
+	 */
+	public function revision(): string
+	{
+		if ($this->revision !== null) {
+			return $this->revision;
+		}
+
+		$folder = $this->folder();
+
+		return $this->revision = md5(serialize([
+			$folder,
+			$this->sprite(),
+			$this->include(),
+			$this->exclude(),
+			$this->kirby()->option('tobimori.icon-field.includeExtension', true) !== false,
+			$folder !== null ? Dir::modified($folder) : null
+		]));
 	}
 
 	/**
@@ -136,8 +200,7 @@ class IconField extends MultiselectField
 		$extension = $kirby->option('tobimori.icon-field.includeExtension', true) !== false;
 
 		$cache = $kirby->cache('tobimori.icon-field');
-		$hash = md5(serialize([$folder, $sprite, $include, $exclude, $extension, Dir::modified($folder)]));
-		$icons = $cache->get($hash);
+		$icons = $cache->get($this->revision());
 
 		if (is_array($icons)) {
 			/** @var list<array{text: string, value: string, svg: string}> $icons */
@@ -151,7 +214,7 @@ class IconField extends MultiselectField
 			return ($include === [] || in_array($name, $include, true)) && !in_array($name, $exclude, true);
 		}));
 
-		$cache->set($hash, $icons);
+		$cache->set($this->revision(), $icons);
 
 		return $icons;
 	}

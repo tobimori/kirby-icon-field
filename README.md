@@ -22,7 +22,7 @@ Download and copy this repository to `/site/plugins/kirby-icon-field`, or apply 
 
 This plugin relies on having your SVG icons as separate files in a folder for display in the panel - of course you're free to do whatever you want with the field's value in your templates.
 
-Icons will always be displayed in single-color white or black.
+Icons will always be displayed in single-color white or black. The panel only loads the SVGs of the icons it shows, so large icon sets work too.
 
 #### Add the field to your blueprint:
 

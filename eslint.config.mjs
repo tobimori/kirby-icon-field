@@ -31,7 +31,8 @@ export default [
 				panel: "readonly",
 				URL: "readonly",
 				navigator: "readonly",
-				setTimeout: "readonly"
+				setTimeout: "readonly",
+				ResizeObserver: "readonly"
 			}
 		}
 	}

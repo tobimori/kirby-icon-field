@@ -23,6 +23,14 @@ https://github.com/getkirby/kirby/blob/main/panel/src/components/Forms/Field/Mul
 <script>
 export default {
 	extends: "k-multiselect-field",
+	provide() {
+		return {
+			iconField: this
+		}
+	},
+	props: {
+		revision: String
+	},
 	emits: ["input"]
 }
 </script>

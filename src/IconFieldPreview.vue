@@ -9,6 +9,8 @@
 </template>
 
 <script>
+import { iconSvg } from "./svgs.js"
+
 export default {
 	inheritAttrs: false,
 	props: {
@@ -24,12 +26,26 @@ export default {
 	},
 	computed: {
 		options() {
-			return (this.field.options ?? []).map((option) => ({
-				...option,
-				text: this.$panel.html(
-					`${option.svg ?? ""}<span>${this.$helper.string.escapeHTML(option.text)}</span>`
-				)
-			}))
+			const values =
+				typeof this.value === "string"
+					? this.value.split(",").map((value) => value.trim())
+					: (this.value ?? [])
+
+			return (this.field.options ?? []).map((option) => {
+				if (values.includes(option.value) === false) {
+					return option
+				}
+
+				const svg = iconSvg(this.field, option.value) ?? ""
+				const text = this.$helper.string.escapeHTML(option.text)
+
+				return {
+					...option,
+					text: this.$panel.html(
+						`<span class="k-icon-field-preview-icon">${svg}</span><span>${text}</span>`
+					)
+				}
+			})
 		}
 	}
 }
@@ -41,10 +57,16 @@ export default {
 	align-items: center;
 	gap: var(--spacing-2);
 
-	svg {
+	.k-icon-field-preview-icon {
 		flex-shrink: 0;
 		width: 1rem;
 		height: 1rem;
+	}
+
+	svg {
+		display: block;
+		width: 100%;
+		height: 100%;
 		filter: var(--icon-field-text-filter);
 	}
 }

@@ -102,6 +102,7 @@ export default {
 		svg {
 			height: 1rem;
 			width: 1rem;
+			fill: revert-layer;
 			filter: brightness(0) invert(1);
 		}
 	}

@@ -47,7 +47,7 @@ export default {
 		width: 1.125rem;
 		margin-inline-end: var(--spacing-2);
 		display: block;
-
+		fill: revert-layer;
 		filter: brightness(0) invert(1);
 	}
 }

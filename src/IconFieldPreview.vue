@@ -40,6 +40,7 @@ export default {
 		width: 1rem;
 		height: 1rem;
 		margin-inline-end: var(--spacing-2);
+		fill: revert-layer;
 		filter: var(--icon-field-text-filter);
 	}
 }

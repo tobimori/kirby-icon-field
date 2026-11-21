@@ -1,26 +1,38 @@
 https://github.com/getkirby/kirby/blob/main/panel/src/components/Forms/Input/MultiselectInput.vue
 
 <template>
-	<div class="k-multiselect-input">
-		<k-icon-tags
-			ref="tags"
-			v-bind="$props"
-			@input="$emit('input', $event)"
-			@click.native.stop="open"
+	<div
+		:class="['k-multiselect-input', $attrs.class]"
+		:data-disabled="disabled"
+		:style="$attrs.style"
+	>
+		<k-input-validator
+			v-bind="{ min, max, required }"
+			:value="JSON.stringify(value)"
+			anchor=".k-multiselect-input-toggle"
 		>
-			<k-button
-				v-if="!max || value.length < max"
-				:id="id"
-				ref="toggle"
-				:autofocus="autofocus"
-				:disabled="disabled"
-				class="k-multiselect-input-toggle k-tags-navigatable"
-				size="xs"
-				icon="triangle-down"
-				@keydown.native.delete="$refs.tags.focus('prev')"
-				@focus.native="open"
-			/>
-		</k-icon-tags>
+			<k-icon-tags
+				ref="tags"
+				v-bind="$props"
+				:removable="true"
+				@input="$emit('input', $event)"
+				@click.stop="open"
+			>
+				<k-button
+					v-if="!max || value.length < max"
+					:id="id"
+					ref="toggle"
+					:autofocus="autofocus"
+					:disabled="disabled"
+					class="k-multiselect-input-toggle k-tags-navigatable"
+					size="xs"
+					icon="angle-down"
+					@keydown.delete="$refs.tags.focus('prev')"
+					@focus="open"
+				/>
+			</k-icon-tags>
+		</k-input-validator>
+
 		<k-icon-picklist-dropdown
 			ref="dropdown"
 			v-bind="$props"
@@ -32,6 +44,7 @@ https://github.com/getkirby/kirby/blob/main/panel/src/components/Forms/Input/Mul
 
 <script>
 export default {
-	extends: "k-multiselect-input"
+	extends: "k-multiselect-input",
+	emits: ["input"]
 }
 </script>

@@ -16,13 +16,15 @@
 			"homepage": "https://moeritz.io"
 		}
 	],
+	"minimum-stability": "RC",
+	"prefer-stable": true,
 	"require": {
-		"php": ">=8.2.0",
+		"php": ">=8.3.0",
 		"getkirby/composer-installer": "^1.2.1"
 	},
 	"require-dev": {
 		"carthage-software/mago": "^1.60.2",
-		"getkirby/cms": "^5.0.0"
+		"getkirby/cms": "^6.0"
 	},
 	"scripts": {
 		"analyze": "mago analyze",

@@ -1,31 +1,38 @@
 https://github.com/getkirby/kirby/blob/main/panel/src/components/Navigation/Tags.vue
 
 <template>
-	<k-navigate ref="navigation" :axis="layout === 'list' ? 'y' : 'x'">
+	<k-navigate
+		ref="navigate"
+		:axis="layout === 'list' ? 'y' : 'x'"
+		select=":where(.k-tag, .k-tags-navigatable):not(:disabled)"
+	>
 		<k-draggable
+			:class="['k-tags', $attrs.class]"
+			:data-layout="layout"
+			:element="element"
 			:list="tags"
 			:options="dragOptions"
-			:data-layout="layout"
-			class="k-tags"
-			@end="save"
+			:style="$attrs.style"
+			@end="input"
 		>
 			<k-tag
 				v-for="(item, itemIndex) in tags"
-				:key="itemIndex"
+				:key="item.id ?? item.value ?? item.text"
+				:class="{ 'k-tag-single': isSingle }"
 				:disabled="disabled"
-				:image="item.image"
-				:removable="!disabled"
+				:element="element"
+				:link="item.link"
+				:removable="removable && !disabled"
+				:theme="theme"
 				name="tag"
-				:class="$attrs.max == 1 ? 'k-tag-single' : null"
-				@keypress.native.enter="edit(itemIndex, item, $event)"
-				@click.native="max == 1 ? edit(itemIndex, item, $event) : $event.preventDefault()"
-				@dblclick.native="edit(itemIndex, item, $event)"
+				@click="isSingle || $event.stopPropagation()"
+				@keypress.enter="edit(itemIndex, item, $event)"
+				@dblclick="edit(itemIndex, item, $event)"
 				@remove="remove(itemIndex, item)"
 			>
 				<!-- eslint-disable-next-line vue/no-v-html -->
-				<span v-if="findSvg(item.value)" class="k-tag-text-icon" v-html="findSvg(item.value)" />
-				<!-- eslint-disable-next-line vue/no-v-html -->
-				<span class="k-tag-text-label" v-html="item.text" />
+				<span v-if="item.svg" class="k-tag-text-icon" v-html="item.svg" />
+				<span v-safe-html="item.text" />
 			</k-tag>
 			<template #footer>
 				<!-- @slot Place stuff here in the non-draggable footer -->
@@ -41,7 +48,7 @@ export default {
 	computed: {
 		isDraggable() {
 			if (
-				this.$attrs.max === 1 ||
+				this.isSingle ||
 				this.sort === true ||
 				this.draggable === false ||
 				this.tags.length === 0 ||
@@ -51,12 +58,12 @@ export default {
 			}
 
 			return true
+		},
+		isSingle() {
+			return this.$attrs.max === 1
 		}
 	},
 	methods: {
-		findSvg(value) {
-			return this.options.find((option) => option.value === value)?.svg ?? null
-		},
 		remove(index) {
 			this.tags.splice(index, 1)
 			this.input()
@@ -66,7 +73,6 @@ export default {
 </script>
 
 <style>
-.k-icon-tag, /* add icon tag class to also target if dragged object */
 .k-input[data-type="icon"] {
 	.k-tags {
 		min-width: 100%;
@@ -102,7 +108,6 @@ export default {
 		svg {
 			height: 1rem;
 			width: 1rem;
-			fill: revert-layer;
 			filter: brightness(0) invert(1);
 		}
 	}

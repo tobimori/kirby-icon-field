@@ -1,46 +1,50 @@
+<template>
+	<k-tags-field-preview
+		v-bind="$attrs"
+		:class="['k-icon-field-preview', $attrs.class]"
+		:column="column"
+		:field="{ ...field, options }"
+		:value="value"
+	/>
+</template>
+
 <script>
 export default {
-	extends: "k-bubbles-field-preview",
-	computed: {
-		html() {
-			return true
+	inheritAttrs: false,
+	props: {
+		column: {
+			default: () => ({}),
+			type: Object
 		},
-		bubbles() {
-			if (!this.value) {
-				return []
-			}
-
-			// this seems kind of hacky,
-			// but it's the easiest way to get the svg to render
-			// without duplicating too much code
-			return this.value.map((value) => ({
-				text: `<span class="k-icon-field-bubble">
-					${this.findSvg(value)}
-					<span>${value}</span>
-				</span>`
-			}))
-		}
+		field: {
+			default: () => ({}),
+			type: Object
+		},
+		value: [Array, String]
 	},
-	methods: {
-		findSvg(value) {
-			return this.field.options.find((option) => option.value === value)?.svg ?? null
+	computed: {
+		options() {
+			return (this.field.options ?? []).map((option) => ({
+				...option,
+				text: this.$panel.html(
+					`${option.svg ?? ""}<span>${this.$helper.string.escapeHTML(option.text)}</span>`
+				)
+			}))
 		}
 	}
 }
 </script>
 
 <style>
-.k-icon-field-bubble {
+.k-icon-field-preview .k-tag-text {
 	display: flex;
 	align-items: center;
-	padding-inline-end: 1rem; /* width: min-content; on .k-bubble otherwise shrinks icon */
+	gap: var(--spacing-2);
 
 	svg {
 		flex-shrink: 0;
 		width: 1rem;
 		height: 1rem;
-		margin-inline-end: var(--spacing-2);
-		fill: revert-layer;
 		filter: var(--icon-field-text-filter);
 	}
 }

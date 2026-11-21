@@ -1,20 +1,22 @@
+https://github.com/getkirby/kirby/blob/main/panel/src/components/Dropdowns/PicklistDropdown.vue
+
 <template>
-	<k-dropdown-content
+	<k-dropdown
 		ref="dropdown"
 		align-x="start"
 		:disabled="disabled"
 		:navigate="false"
 		class="k-picklist-dropdown"
-		@click.native.stop
+		@click.stop
 	>
 		<k-icon-picklist-input
 			v-bind="$props"
-			@click.native.stop
+			@click.stop
 			@create="add"
 			@input="input"
 			@escape="$refs.dropdown.close()"
 		/>
-	</k-dropdown-content>
+	</k-dropdown>
 </template>
 
 <script>

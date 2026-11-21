@@ -3,7 +3,6 @@
 .zed/ export-ignore
 src/ export-ignore
 scripts/ export-ignore
-stubs/ export-ignore
 .gitattributes export-ignore
 .gitignore export-ignore
 .nvmrc export-ignore

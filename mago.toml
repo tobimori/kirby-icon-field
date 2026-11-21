@@ -1,10 +1,10 @@
 #:schema vendor/carthage-software/mago/schema.json
 version = "1"
-php-version = "8.2"
+php-version = "8.3"
 
 [source]
-paths = ["index.php", "config"]
-includes = ["vendor", "stubs"]
+paths = ["index.php", "classes"]
+includes = ["vendor"]
 
 [source.glob]
 literal-separator = true
@@ -49,10 +49,6 @@ halstead = { enabled = false }
 no-else-clause = { enabled = false }
 no-boolean-flag-parameter = { enabled = false }
 prefer-early-continue = { max_allowed_statements = 2 }
-# Kirby binds `$this` to field closures
-prefer-static-closure = { exclude = ["config/"] }
-prefer-first-class-callable = { exclude = ["config/"] }
-prefer-arrow-function = { exclude = ["config/"] }
 
 [analyzer]
 ignore = ["mixed-assignment"]

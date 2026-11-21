@@ -60,8 +60,9 @@ php -r '
 
 	$file = $argv[1] . "/site/blueprints/pages/default.yml";
 	$blueprint = Yaml::read($file);
-	if (!isset($blueprint["columns"]["main"]["sections"]["fields"]["fields"]["icon"])) {
-		$blueprint["columns"]["main"]["sections"]["fields"]["fields"]["icon"] = ["type" => "icon", "max" => 1];
+	if (!isset($blueprint["fields"]["icon"])) {
+		$blueprint["fields"]["icon"] = ["type" => "icon", "max" => 1];
+		$blueprint["columns"]["main"]["fields"][] = "icon";
 		Yaml::write($file, $blueprint);
 	}
 ' "$playground"

@@ -17,5 +17,5 @@
 	"experimentalSortPackageJson": {
 		"sortScripts": true
 	},
-	"ignorePatterns": ["index.js", "index.css", "vendor/**", ".playground/**"]
+	"ignorePatterns": ["/index.js", "/index.css", "vendor/**", ".playground/**"]
 }

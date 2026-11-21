@@ -40,7 +40,7 @@ export default {
 		width: 1rem;
 		height: 1rem;
 		margin-inline-end: var(--spacing-2);
-		filter: brightness(0);
+		filter: var(--icon-field-text-filter);
 	}
 }
 </style>

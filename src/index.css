@@ -1,0 +1,8 @@
+/* The panel theme is a user setting, so prefers-color-scheme does not match it */
+:root {
+	--icon-field-text-filter: brightness(0);
+}
+
+:root:has(.k-panel[data-theme="dark"]) {
+	--icon-field-text-filter: brightness(0) invert(1);
+}

@@ -83,7 +83,7 @@ export default {
 		width: calc(100% + var(--tags-gap));
 
 		svg {
-			filter: brightness(0);
+			filter: var(--icon-field-text-filter);
 		}
 	}
 

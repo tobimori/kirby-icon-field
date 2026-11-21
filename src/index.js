@@ -1,3 +1,4 @@
+import "./index.css"
 import IconChoiceInput from "./IconChoiceInput.vue"
 import IconChoicesInput from "./IconChoicesInput.vue"
 import IconField from "./IconField.vue"

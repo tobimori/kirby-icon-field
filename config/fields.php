@@ -1,5 +1,6 @@
 <?php
 
+use Kirby\Exception\InvalidArgumentException;
 use Kirby\Filesystem\Dir;
 use Kirby\Filesystem\F;
 use Kirby\Form\Field;
@@ -124,26 +125,39 @@ return [
 				/** @var Field $this */
 				$kirby = kirby();
 				$cache = $kirby->cache('tobimori.icon-field');
-				$hash = md5(serialize(A::get($this->props(), ['folder', 'sprite', 'include', 'exclude'])));
+				$folder = (string)$this->folder();
+				$sprite = $this->sprite();
+				$hash = md5(serialize([
+					A::get($this->props(), ['folder', 'sprite', 'include', 'exclude']),
+					is_dir($folder) ? Dir::modified($folder) : null
+				]));
 
 				// Return the cached data if available
 				if ($data = $cache->get($hash)) {
 					return $data;
 				}
 
-				$folder = (string)$this->folder();
-				$sprite = $this->sprite();
+				$sanitize = function (string $file): string {
+					$svg = (string)F::read($file);
+
+					try {
+						return $svg !== '' ? Svg::sanitize($svg) : '';
+					} catch (InvalidArgumentException) {
+						return '';
+					}
+				};
 
 				if (!$sprite) {
 					$files = A::filter(Dir::read($folder), fn (string $file) => Str::endsWith($file, 'svg', true));
 					$data = A::map($files, fn (string $file) => [
 						'text' => $kirby->option('tobimori.icon-field.includeExtension') ? $file : Str::before($file, '.'),
 						'value' => $file,
-						'svg' => Svg::sanitize((string)F::read($folder . '/' . $file))
+						'svg' => $sanitize($folder . '/' . $file)
 					]);
 					$data = A::filter($data, fn (array $icon) => $icon['svg'] !== '');
 				} else {
-					$svg = simplexml_load_string(Svg::sanitize((string)F::read($folder . '/' . $sprite)));
+					$markup = $sanitize($folder . '/' . $sprite);
+					$svg = $markup !== '' ? simplexml_load_string($markup) : false;
 					$symbols = [];
 
 					if ($svg !== false) {

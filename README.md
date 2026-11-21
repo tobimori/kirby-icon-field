@@ -37,8 +37,7 @@ fields:
     # [more settings...] - same as multi-select field, e.g. disabling search, limiting icons, etc.
 ```
 
-> [!NOTE]
-> If you're using a sprite, make sure the file is available for the user to access at the set path. The plugin does not copy or move the file, it only references it. The `#id` reference will be stored without a `.svg` extension unlike the individual files mode.
+Icon files with invalid SVG markup are skipped.
 
 #### Use the field value in your template
 
@@ -46,13 +45,34 @@ fields:
 <?= svg('/assets/icons/' . $page->icon()) ?>
 ```
 
+#### Use an SVG sprite
+
+With the `sprite` option, each `<symbol>` with an `id` in the sprite file becomes an icon. The sprite needs a single `<svg>` root element with the SVG namespace:
+
+```xml
+<svg xmlns="http://www.w3.org/2000/svg">
+  <symbol id="arrow" viewBox="0 0 24 24">
+    <path d="…" />
+  </symbol>
+  <symbol id="star" viewBox="0 0 24 24">
+    <path d="…" />
+  </symbol>
+</svg>
+```
+
+The panel shows the icons from the URL of the sprite, so the file must be publicly accessible at the set path, e.g. in `assets/icons`. The plugin does not copy or move the file. The field stores the `id` of the symbol without a `.svg` extension:
+
+```php
+<svg><use href="/assets/icons/svg-sprite.svg#<?= $page->icon() ?>"></use></svg>
+```
+
 ## Options
 
-| Option   | Default        | Description                                              |
-| -------- | -------------- | -------------------------------------------------------- |
-| `cache`  | `true`         | Enable cache for reading from icons directory            |
-| `folder` | `assets/icons` | Default folder for icon field, can also be a function    |
-| `sprite` | `null`         | Default file for SVG sprite file, can also be a function |
+| Option   | Default        | Description                                                                               |
+| -------- | -------------- | ----------------------------------------------------------------------------------------- |
+| `cache`  | `true`         | Enable cache for reading from icons directory, it updates when files in the folder change |
+| `folder` | `assets/icons` | Default folder for icon field, can also be a function                                     |
+| `sprite` | `null`         | Default file for SVG sprite file, can also be a function                                  |
 
 Options allow you to fine tune the behaviour of the plugin. You can set them in your `config.php` file:
 

@@ -5,15 +5,19 @@
   "scripts": {
     "dev": "kirbyup serve src/index.js",
     "build": "kirbyup src/index.js",
-    "prepare": "husky install"
+    "prepare": "husky install",
+    "playground": "PHP_CLI_SERVER_WORKERS=4 php -S ${HOST:-127.0.0.1}:${PORT:-8000} -t .playground .playground/kirby/router.php",
+    "playground:portless": "portless run --name icon-field pnpm playground"
   },
   "type": "module",
   "devDependencies": {
     "autoprefixer": "^10.4.17",
     "husky": "^8.0.3",
     "kirbyup": "^2.2.1",
+    "portless": "^0.15.8",
     "postcss": "^8.4.33",
     "postcss-logical": "^6.2.0",
     "sass": "^1.70.0"
-  }
+  },
+  "packageManager": "pnpm@12.11.2"
 }

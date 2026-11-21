@@ -3,10 +3,9 @@
 .idea
 *.cache
 
-# Dev files
-index.dev.mjs
 node_modules
+index.dev.mjs
 /.playground/
 
-# Composer is not needed for this plugin
+# The plugin has no Composer dependencies, vendor/ only holds development tools
 /vendor

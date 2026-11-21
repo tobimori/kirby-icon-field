@@ -1,0 +1,99 @@
+name: ci
+
+on:
+  push:
+  pull_request:
+
+jobs:
+  lint-and-format:
+    name: lint and format
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: checkout
+        uses: actions/checkout@v7
+
+      - name: setup php
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: "8.5"
+          coverage: none
+          tools: composer
+
+      - name: install php dependencies
+        run: composer install --no-interaction --no-progress --prefer-dist
+
+      - name: setup node
+        uses: actions/setup-node@v7
+        with:
+          node-version: "24"
+
+      - name: install pnpm
+        uses: pnpm/action-setup@v6
+
+      - name: install node dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: run eslint
+        run: pnpm run lint
+
+      - name: check oxfmt formatting
+        run: pnpm exec oxfmt --check
+
+      - name: check mago formatting
+        run: vendor/bin/mago fmt --check
+
+      - name: run mago lint
+        if: success() || failure()
+        run: vendor/bin/mago lint
+
+  build:
+    name: build
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: checkout
+        uses: actions/checkout@v7
+
+      - name: setup node
+        uses: actions/setup-node@v7
+        with:
+          node-version: "24"
+
+      - name: install pnpm
+        uses: pnpm/action-setup@v6
+
+      - name: install node dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: build panel assets
+        run: pnpm run build
+
+      - name: check committed build output
+        run: git diff --exit-code -- index.js index.css
+
+  static-analysis:
+    name: static analysis (PHP ${{ matrix.php }})
+    runs-on: ubuntu-latest
+
+    strategy:
+      fail-fast: false
+      matrix:
+        php: ["8.2", "8.3", "8.4", "8.5"]
+
+    steps:
+      - name: checkout
+        uses: actions/checkout@v7
+
+      - name: setup php
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: ${{ matrix.php }}
+          coverage: none
+          tools: composer
+
+      - name: install php dependencies
+        run: composer install --no-interaction --no-progress --prefer-dist
+
+      - name: run mago analyze
+        run: vendor/bin/mago --php-version=${{ matrix.php }} analyze

@@ -1,0 +1,21 @@
+{
+	"$schema": "./node_modules/oxfmt/configuration_schema.json",
+	"semi": false,
+	"trailingComma": "none",
+	"useTabs": true,
+	"tabWidth": 2,
+	"sortImports": {
+		"groups": [
+			"type-import",
+			["value-builtin", "value-external"],
+			["value-internal"],
+			["value-parent"],
+			["value-sibling"],
+			["value-index"]
+		]
+	},
+	"experimentalSortPackageJson": {
+		"sortScripts": true
+	},
+	"ignorePatterns": ["index.js", "index.css", "vendor/**", ".playground/**"]
+}

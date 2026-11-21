@@ -1,3 +1,4 @@
 - `bash scripts/setup.sh` installs dependencies and creates a Kirby Starterkit playground in `.playground/` with this plugin linked. Panel credentials are in `.playground/.panel-credentials`. The default page blueprint has an icon field that uses the Starterkit icons in `.playground/assets/icons`.
 - `pnpm playground` serves it at `http://localhost:8000` (`pnpm playground:portless` for a Portless URL, see `pnpm exec portless list`), and `pnpm dev` adds panel HMR.
-- `index.js` and `index.css` are build output: the pre-commit hook runs `pnpm build` and stages them.
+- `index.js` and `index.css` are committed build output: run `pnpm build` after changes in `src/`. CI fails if they are out of date.
+- Check PHP with `composer fix` (Mago lint fixes and format) and `composer analyze`, and JS with `pnpm lint:fix` and `pnpm format`.

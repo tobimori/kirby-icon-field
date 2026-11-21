@@ -1,37 +1,48 @@
 {
-  "name": "tobimori/kirby-icon-field",
-  "description": "A simple Icon field plugin for Kirby CMS",
-  "version": "2.3.0",
-  "type": "kirby-plugin",
-  "keywords": [
-    "kirby",
-    "kirby-plugin"
-  ],
-  "license": "MIT",
-  "authors": [
-    {
-      "name": "Tobias Möritz",
-      "email": "tobias@moeritz.io",
-      "homepage": "https://moeritz.io"
-    }
-  ],
-  "require": {
-    "php": ">=8.2.0",
-    "getkirby/composer-installer": "^1.2"
-  },
-  "require-dev": {
-    "getkirby/cms": "^5"
-  },
-  "scripts": {
-    "dist": "composer install --no-dev --optimize-autoloader"
-  },
-  "config": {
-    "optimize-autoloader": true,
-    "allow-plugins": {
-      "getkirby/composer-installer": true
-    }
-  },
-  "extra": {
-    "kirby-cms-path": false
-  }
+	"name": "tobimori/kirby-icon-field",
+	"description": "A simple Icon field plugin for Kirby CMS",
+	"type": "kirby-plugin",
+	"version": "2.3.0",
+	"license": "MIT",
+	"homepage": "https://github.com/tobimori/kirby-icon-field#readme",
+	"keywords": [
+		"kirby",
+		"kirby-plugin"
+	],
+	"authors": [
+		{
+			"name": "Tobias Möritz",
+			"email": "tobias@moeritz.io",
+			"homepage": "https://moeritz.io"
+		}
+	],
+	"require": {
+		"php": ">=8.2.0",
+		"getkirby/composer-installer": "^1.2.1"
+	},
+	"require-dev": {
+		"carthage-software/mago": "^1.60.2",
+		"getkirby/cms": "^5.0.0"
+	},
+	"scripts": {
+		"analyze": "mago analyze",
+		"dist": "composer install --no-dev --optimize-autoloader",
+		"fix": [
+			"mago lint --fix",
+			"mago fmt"
+		],
+		"fmt": "mago fmt",
+		"fmt:check": "mago fmt --check",
+		"lint": "mago lint"
+	},
+	"config": {
+		"optimize-autoloader": true,
+		"allow-plugins": {
+			"carthage-software/mago": true,
+			"getkirby/composer-installer": true
+		}
+	},
+	"extra": {
+		"kirby-cms-path": false
+	}
 }

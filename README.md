@@ -34,10 +34,13 @@ fields:
     folder: assets/icons # path to your icon folder, relative to the `index` kirby root (you can use the Kirby query language)
     max: 1 # max number of icons to select - 1 will look like a 'select field', none or more like a 'multiselect' field
     sprite: svg-sprite.svg # optional, path to your svg sprite relative to folder option, if you want to use a sprite instead of individual files (you can use the Kirby query language)
-    # [more settings...] - same as multi-select field, e.g. disabling search, limiting icons, etc.
+    search: # optional, set to false to disable the search
+      min: 2 # minimum number of characters before the search starts
+      display: 20 # number of icons to show before the "show all" button
+    # [more settings...] - same as multi-select field, e.g. limiting icons, etc.
 ```
 
-Icon files with invalid SVG markup are skipped.
+The icon field supports all options of the [multiselect field](https://getkirby.com/docs/reference/panel/fields/multiselect). Icon files with invalid SVG markup are skipped.
 
 #### Use the field value in your template
 
